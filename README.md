@@ -1,5 +1,6 @@
 # ATM
 
+``` text
 ATM-System/
 │
 ├── README.md
@@ -17,3 +18,4 @@ ATM-System/
     ├── ATM.cpp
     ├── ATM.h
     └── ...
+```
