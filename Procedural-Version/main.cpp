@@ -32,6 +32,7 @@ struct User{ // User Data ======================= //
 
 struct Client{ // Client Data ======================= //
     std::string accountHolder = " ";
+    long AccountNumber = 0;
     long long lowAccountNumber = 1000000000 , highAccountNumber = 2000000000; // Created to make random ( Account Number ) 
     std::string accountType = " ";
     std::string Status = " "; // ACTIV OR NOT
@@ -80,7 +81,7 @@ struct Card{ // Card Data ======================= //
 
 }; // Card Data End ======================= //
 
-int main(){ 
+int main(){ // main  ======================= //
     srand(time(nullptr));
 
 
@@ -181,9 +182,9 @@ void clientProcess(){ // Client ====================== //
         std::cout << "\n=================================" << std::endl;
         std::cout << "======== CLIENT SERVICE =========" << std::endl;
         std::cout << "=================================" << std::endl;
-        std::cout << "CLIENT NUMBER [" << 1+i << "]" << std::endl;
-        std::cout << "Please type y - Y{yeas} or n - N(no)" << std::endl;
-        std::cout << "Savings Account? ";
+        std::cout << "= CLIENT NUMBER [ " << client[i].AccountNumber << " ]" << std::endl;
+        std::cout << "= Please type y - Y{yeas} or n - N(no)" << std::endl; 
+        std::cout << "= Savings Account? ";
         std::cin >> client[i].accountStatus;
         if( client[i].accountStatusOptions == 'y' || client[i].accountStatusOptions == 'Y' ){
             client[i].accountStatus = "SAVINGS";
@@ -205,7 +206,7 @@ void clientProcess(){ // Client ====================== //
                     default: std::cout << "Wrong choice" << std::endl;
                 } // End switch ====================== //
             } else {
-                std::cout << "out of range" << std::endl;
+                std::cout << "OUT OF RANGE" << std::endl;
             } // End if ====================== //
         } // End for ====================== //
 
