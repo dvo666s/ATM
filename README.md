@@ -1,7 +1,7 @@
-# ATM
+# Bank Management System
 
 ``` text
-ATM-System/
+Bank Management System/
 │
 ├── README.md
 │
