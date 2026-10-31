@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include <iomanip>
+// #include <iomanip>
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -8,7 +8,7 @@
 #include <ctime>
 #include <random>
 
-int SizesProcess();
+int SizesProcess(int choice);
 void IdProcess();
 void ClientProcess();
 // void BankProcess();
@@ -19,12 +19,17 @@ void ClientProcess();
 struct Data{ // Data  ======================= //
     int sizes = 0;
     int choice = 0;
+    int limit = 1;
+    int userChoice = 1 , clientChoice = 2;
 
 }; // Data End ======================= //
 
 struct User{ // User Data ======================= //
+
+    
     std::string name = " ";
-    std::string id = " ";
+    int lowIdRandomAToZ = 65 ,highidRandomAToZ = 90; // ASCII A -> Z
+    long userId = 0, lowUserId = 100000000 , highUserId = 1000000000;
     std::string address = " ";
     int age = 0;
 
@@ -32,8 +37,7 @@ struct User{ // User Data ======================= //
 
 struct Client{ // Client Data ======================= //
     std::string accountHolder = " ";
-    long AccountNumber = 0;
-    long long lowAccountNumber = 1000000000 , highAccountNumber = 2000000000; // Created to make random ( Account Number ) 
+    long long AccountNumber = 0, lowAccountNumber = 1000000000 , highAccountNumber = 2000000000; // Created to make random ( Account Number ) 
     std::string accountType = " ";
     std::string Status = " "; // ACTIV OR NOT
     int currencyOptions = 0; 
@@ -52,7 +56,6 @@ struct Bank{ // Bank Data ======================= //
     float accountFees = 0;
     double withdDraw = 0 , withdDrawLimts = 0 , deposit = 0;
 
-
     // if Account Status is savings;
     int Interest = 10; // 500 X 10/100 = 50
     
@@ -62,12 +65,11 @@ struct Atm{ // ATM Data  ======================= //
     int title = 0;
     int switchLoop = 0;
     char Continue = ' ';
-    int limit = 1;
     char option = ' ';
 }; // End Data Atm ======================= //
 
 struct Card{ // Card Data ======================= //
-    std::array<long, 10> randomData {
+    std::array<int, 10> randomData {
         1000,10000, // credit id
         1,12, // month
         27,35, // years
@@ -83,6 +85,7 @@ struct Card{ // Card Data ======================= //
 
 int main(){ // main  ======================= //
     srand(time(nullptr));
+
 
 
 
@@ -113,8 +116,8 @@ int main(){ // main  ======================= //
 
 // bottons ======================= //
     // atmProcess( card.passWord , bank.Balance );
-    // Id();
-    clientProcess();
+    IdProcess();
+    ClientProcess();
     // display( card.id , card.credData );
 
 // ATM MENU ====================== //
@@ -124,85 +127,91 @@ int main(){ // main  ======================= //
     return 0;
 } // End main  ======================= //
 
-int SizesProcess(){ // Sizes Process  ======================= //
-    Data data;
+int SizesProcess( int choice ){ // Sizes Process  ======================= //
     int usertSize = 0 , clientSize = 0;
-    do{
-        std::cout << "\n=========================" << std::endl;
-        std::cout << "======== CHOICE =========" << std::endl;
-        std::cout << "=========================" << std::endl;
-        std::cout << "= 1 - CLIENT " << std::endl;
-        std::cout << "= 2 - USER " << std::endl;
-        std::cout << "=========================" << std::endl;
-        std::cout << "Choice: ";
-        std::cin >> data.choice;
-        if( data.choice >= 0 && data.choice < 3){
-                switch(data.choice){
-                    case 1:
+        do{
+            switch(choice){
+                case 1:
+                    std::cout << "\n=================================" << std::endl;
+                    std::cout << "======== SIZE OF USERS =========" << std::endl;
+                    std::cout << "==================================" << std::endl;
+                    std::cout << "= HOW MANY USERS: ";
+                    std::cin >> usertSize;
+                    if(usertSize > 0){
+                        return usertSize;
+                    } else std::cout << " ERROR: 0 OR NEGATIVE " << std::endl;
+                break;
+
+                case 2:
+                    if(clientSize < 0 ){
                         std::cout << "\n=================================" << std::endl;
                         std::cout << "======== SIZE OF CLIENTS =========" << std::endl;
                         std::cout << "==================================" << std::endl;
                         std::cout << "= HOW MANY CLIENT: ";
                         std::cin >> clientSize;
-                        return clientSize;
-                    break;
-
-                    case 2:
-                        std::cout << "\n=================================" << std::endl;
-                        std::cout << "======== SIZE OF USERS =========" << std::endl;
-                        std::cout << "==================================" << std::endl;
-                        std::cout << "= HOW MANY USERS: ";
-                        std::cin >> usertSize;
-                        return usertSize;
-                    break;
-
-                    default:
-                        std::cout << "= WRONG CHOICE " << std::endl;
-                    break;
-
-                } // End switch ====================== //
-            }else std::cout << "out of range" << std::endl; // End if ====================== //
-        }while(true); // End do ====================== //
+                        if(usertSize > 0){
+                            return usertSize;
+                        } else std::cout << " ERROR: 0 OR NEGATIVE " << std::endl;
+                    }
+                break;
+            } // End switch ====================== //
+        }while(true);
 } // Sizes Process End ====================== //
 
-void Id(){ // ID  ====================== //
+void IdProcess(){ // ID  ====================== //
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    Data data;
+    std::vector<User>user(SizesProcess(data.userChoice));
+
+    // ID Process  ====================== //
+
+    for(int i = 0; i < user.size() ; ++i){
+
+        std::uniform_int_distribution<std::mt19937::result_type> dist6( user.at(i).lowIdRandomAToZ , user.at(i).highidRandomAToZ );
+        user.at(i).userId = user.at(i).lowUserId + std::rand() % ( user.at(i).highUserId - user.at(i).lowUserId);
 
         std::cout << "\n===============================" << std::endl;
         std::cout << "======== USER ID =========" << std::endl;
         std::cout << "===============================" << std::endl;
+        std::cout << "= ID: " << char(dist6(rng)) << user.at(i).userId << std::endl;
+    }
+
+    // ID Process End ====================== //
+
+
 
 } // ID End ====================== //
 
-void clientProcess(){ // Client ====================== //
+void ClientProcess(){ // Client ====================== //
     Data data;
-    data.sizes += SizesProcess();
-    Client client[data.sizes];
+    std::vector<Client> client(SizesProcess(data.clientChoice));
 
-    for(int i = 0; i < data.sizes ; ++i){
+    for(int i = 0; i < client.size() ; ++i){
         std::cout << "\n=================================" << std::endl;
         std::cout << "======== CLIENT SERVICE =========" << std::endl;
         std::cout << "=================================" << std::endl;
-        std::cout << "= CLIENT NUMBER [ " << client[i].AccountNumber << " ]" << std::endl;
+        std::cout << "= CLIENT NUMBER [ " << client.at(i).AccountNumber << " ]" << std::endl;
         std::cout << "= Please type y - Y{yeas} or n - N(no)" << std::endl; 
         std::cout << "= Savings Account? ";
-        std::cin >> client[i].accountStatus;
-        if( client[i].accountStatusOptions == 'y' || client[i].accountStatusOptions == 'Y' ){
-            client[i].accountStatus = "SAVINGS";
-        } else if ( client[i].accountStatusOptions == 'n' || client[i].accountStatusOptions == 'N' ) {
-            client[i].accountStatus = "Current";
+        std::cin >> client.at(i).accountStatus;
+        if( client.at(i).accountStatusOptions == 'y' || client.at(i).accountStatusOptions == 'Y' ){
+            client.at(i).accountStatus = "SAVINGS";
+        } else if ( client.at(i).accountStatusOptions == 'n' || client.at(i).accountStatusOptions == 'N' ) {
+            client.at(i).accountStatus = "Current";
         } // End if ====================== //
         
         std::cout << "( 1 - USD | 2 - EUR | 3 - GBP )" << std::endl;
         std::cout << "How Many Currency? ";
-        std::cin >> client[i].currencySize;
-        for( int j = 0; j < client[i].currencySize ; ++j){
+        std::cin >> client.at(i).currencySize;
+        for( int j = 0; j < client.at(i).currencySize ; ++j){
             std::cout << "Which Currency? ";
-            std::cin >> client[i].currencyOptions;
-            if( client[i].currencyOptions <= 3 && client[i].currencyOptions > 0 ){
-                switch(client[i].currencyOptions){
-                    case 1: client[i].Currency.push_back("USD"); break;
-                    case 2: client[i].Currency.push_back("EUR"); break;
-                    case 3: client[i].Currency.push_back("GBP"); break;
+            std::cin >> client.at(i).currencyOptions;
+            if( client.at(i).currencyOptions <= 3 && client.at(i).currencyOptions > 0 ){
+                switch(client.at(i).currencyOptions){
+                    case 1: client.at(i).Currency.push_back("USD"); break;
+                    case 2: client.at(i).Currency.push_back("EUR"); break;
+                    case 3: client.at(i).Currency.push_back("GBP"); break;
                     default: std::cout << "Wrong choice" << std::endl;
                 } // End switch ====================== //
             } else {
@@ -211,11 +220,11 @@ void clientProcess(){ // Client ====================== //
         } // End for ====================== //
 
         std::cout << "Debit Card? " << std::endl;
-        std::cin >> client[i].debitCardOptions;
-        if( client[i].debitCardOptions == 'Y' || client[i].debitCardOptions == 'y' ){
-            client[i].debitCard = "yes";
-        } else if ( client[i].debitCardOptions == 'N' || client[i].debitCardOptions == 'n' ){
-            client[i].debitCard = "No";
+        std::cin >> client.at(i).debitCardOptions;
+        if( client.at(i).debitCardOptions == 'Y' || client.at(i).debitCardOptions == 'y' ){
+            client.at(i).debitCard = "yes";
+        } else if ( client.at(i).debitCardOptions == 'N' || client.at(i).debitCardOptions == 'n' ){
+            client.at(i).debitCard = "No";
         } else std::cout << " PLEASE YES OR NO " << std::endl;
     } // End for ====================== //
 } // Client End ====================== //
