@@ -8,17 +8,10 @@
 #include <ctime>
 #include <random>
 
-int SizesProcess(int choice);
-void IdProcess();
-void ClientProcess();
-// void BankProcess();
-// void Menu();
-// void AtmProcess( int passWord ,double &balance);
-// void Display( int id[] ,int credData[] );
-
 struct Data{ // Data  ======================= //
     int sizes = 0;
     int choice = 0;
+    char option = ' ';
     int limit = 1;
     int userChoice = 1 , clientChoice = 2;
 
@@ -43,6 +36,8 @@ struct Account{ // Client Data ======================= //
     int currencySize = 0;
     std::vector <std::string> Currency; // "USD" , "EUR" , "GBP"
     std::string accountStatus = " "; // SAVINGS OR NOT
+    std::vector <std::string> Products;
+    std::array<int , 4>  Interest = { 2 , 5 , 8 , 12}; // EX: 500 * 10/100 = 50
     char accountStatusOptions = ' ';
     std::string debitCard = " ";
     char debitCardOptions = ' ';
@@ -55,16 +50,14 @@ struct Bank{ // Bank Data ======================= //
     float accountFees = 0;
     double withdDraw = 0 , withdDrawLimts = 0 , deposit = 0;
 
-    // if Account Status is savings;
-    int interestOne = 10 , interestOne = 15 , interestOne = 30; // 500 X 10/100 = 50
-        
+    // if Account Status is savings | Account Products
+
 }; // Bank Data End ======================= //
 
 struct Atm{ // ATM Data  ======================= //
     int title = 0;
     int switchLoop = 0;
     char Continue = ' ';
-    char option = ' ';
 }; // End Data Atm ======================= //
 
 struct Card{ // Card Data ======================= //
@@ -82,11 +75,19 @@ struct Card{ // Card Data ======================= //
 
 }; // Card Data End ======================= //
 
+int sizesProcess(int choice);
+void savingsMenu( int choice , std::vector <std::string> Currency , std::array<int , 4>  Interest );
+void savingsProcess( int choice , std::vector <std::string> Products );
+void clientProcess();
+void accountProcess();
+// void BankProcess();
+// void Menu();
+// void AtmProcess( int passWord ,double &balance);
+// void Display( int id[] ,int credData[] );
+
+
 int main(){ // main  ======================= //
     srand(time(nullptr));
-
-
-
 
 // Random bank data ======================= //
     // std::random_device _rd{};
@@ -115,8 +116,8 @@ int main(){ // main  ======================= //
 
 // bottons ======================= //
     // atmProcess( card.passWord , bank.Balance );
-    IdProcess();
-    ClientProcess();
+    clientProcess();
+    accountProcess();
     // display( card.id , card.credData );
 
 // ATM MENU ====================== //
@@ -126,7 +127,7 @@ int main(){ // main  ======================= //
     return 0;
 } // End main  ======================= //
 
-int SizesProcess( int choice ){ // Sizes Process  ======================= //
+int sizesProcess( int choice ){ // Sizes Process  ======================= //
     int usertSize = 0 , clientSize = 0;
         do{
             switch(choice){
@@ -155,13 +156,12 @@ int SizesProcess( int choice ){ // Sizes Process  ======================= //
         }while(true);
 } // Sizes Process End ====================== //
 
-void IdProcess(){ // ID  ====================== //
+void clientProcess(){ // Client Process ====================== //
     std::random_device dev;
     std::mt19937 rng(dev());
     Data data;
-    std::vector<Client>user(SizesProcess(data.userChoice));
+    std::vector<Client>user(sizesProcess(data.userChoice));
 
-    // ID Process  ====================== //
 
     for(int i = 0; i < user.size() ; ++i){
 
@@ -174,15 +174,12 @@ void IdProcess(){ // ID  ====================== //
         std::cout << "= ID: " << char(dist6(rng)) << user.at(i).userId << std::endl;
     }
 
-    // ID Process End ====================== //
 
+} // ID Process End ====================== //
 
-
-} // ID End ====================== //
-
-void ClientProcess(){ // Client ====================== //
+void accountProcess(){ // Account ====================== //
     Data data;
-    std::vector<Account> account(SizesProcess(data.clientChoice));
+    std::vector<Account> account(sizesProcess(data.clientChoice));
 
     for(int i = 0; i < account.size() ; ++i){
         std::cout << "\n=================================" << std::endl;
@@ -196,13 +193,13 @@ void ClientProcess(){ // Client ====================== //
             account.at(i).accountStatus = "SAVINGS";
         } else if ( account.at(i).accountStatusOptions == 'n' || account.at(i).accountStatusOptions == 'N' ) {
             account.at(i).accountStatus = "Current";
-        } // End if ====================== //
-        
-        std::cout << "( 1 - USD | 2 - EUR | 3 - GBP )" << std::endl;
+        } else std::cerr << "PLEASE YES OR NO" << std::endl;
+         // End if ====================== //
+        std::cout << "= ( 1 - USD | 2 - EUR | 3 - GBP )" << std::endl;
         std::cout << "How Many Currency? ";
         std::cin >> account.at(i).currencySize;
         for( int j = 0; j < account.at(i).currencySize ; ++j){
-            std::cout << "Which Currency? ";
+            std::cout << "= Which Currency? ";
             std::cin >> account.at(i).currencyOptions;
             if( account.at(i).currencyOptions <= 3 && account.at(i).currencyOptions > 0 ){
                 switch(account.at(i).currencyOptions){
@@ -212,9 +209,16 @@ void ClientProcess(){ // Client ====================== //
                     default: std::cout << "Wrong choice" << std::endl;
                 } // End switch ====================== //
             } else {
-                std::cout << "OUT OF RANGE" << std::endl;
+                std::cerr << "= ERROR: OUT OF RANGE " << std::endl;
             } // End if ====================== //
         } // End for ====================== //
+        std::cout << "Stay On Standard Savings Account or explore our available Savings Plans? ";
+        std::cin >> data.option;
+        if(data.option == 'Y' && data.option == 'y'){
+            savingsMenu( data.option , account.at(i).Currency , account.at(i).Interest );
+        }else if(data.option == 'N' && data.option == 'n'){
+            savingsMenu( data.option , account.at(i).Currency , account.at(i).Interest );    
+        } else std::cerr << "PLEASE YES OR NO" << std::endl;
 
         std::cout << "Debit Card? " << std::endl;
         std::cin >> account.at(i).debitCardOptions;
@@ -222,10 +226,106 @@ void ClientProcess(){ // Client ====================== //
             account.at(i).debitCard = "yes";
         } else if ( account.at(i).debitCardOptions == 'N' || account.at(i).debitCardOptions == 'n' ){
             account.at(i).debitCard = "No";
-        } else std::cout << " PLEASE YES OR NO " << std::endl;
+        } else std::cerr << "PLEASE YES OR NO" << std::endl;
     } // End for ====================== //
-} // Client End ====================== //
+} // Account End ====================== //
 
+void savingsMenu( int choice , std::vector <std::string> Currency , int Interest[] ){
+
+    switch(choice){
+        case 1:
+        std::cout << "\n================================" << std::endl;
+        std::cout << "=========== STANDARD =============" << std::endl;
+        std::cout << "================================" << std::endl;
+        for( int i = 0; i < Currency.size() ; ++i){
+            std::cout << "= Minimum Required Balance in" << Currency.at(i) << std::endl;
+            std::cout << "= 500 " << Currency.at(i) << std::endl;
+            std::cout << "= Annual Interest Rate " << std::endl;
+            std::cout << "= * " << Interest[0] << "%" << std::endl;
+            std::cout << "= Interest Payment Frequency " << std::endl;
+            std::cout << "= * 20 " << Currency.at(i) << " Monthly" << std::endl;
+            std::cout << "= Debit Card: Optional " << std::endl;
+            std::cout << "= * (Additional Fees Apply) " << std::endl;
+            std::cout << "= Benefits " << std::endl;
+            std::cout << "= * Basic deposits, withdrawals, and account management " << std::endl;
+            if(){
+                std::cout << "================================" << std::endl;
+            }
+        }
+            std::cout << "================================" << std::endl;
+            std::cout << "================================" << std::endl;
+
+        break;
+
+        case 2:
+            std::cout << "\n========================================" << std::endl;
+            std::cout << "============= SAVINGS PLANS =============" << std::endl;
+            std::cout << "=========================================" << std::endl;
+            std::cout << "= 1 | Basic Saver For Beginners         =" << std::endl;
+            std::cout << "= 2 | Smart Saver For Regular saving    =" << std::endl;
+            std::cout << "= 3 | Premium Saver For Regular saving  =" << std::endl;
+            std::cout << "=========================================" << std::endl;
+            for( int i = 0; i < Currency.size() ; ++i){
+                std::cout << "= 1 Basic Saver                         =" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "= Minimum Opening Deposit               " << std::endl;
+                std::cout << "= * 5,000 "<< Currency.at(i)             << std::endl;
+                std::cout << "= Minimum Required Balance              " << std::endl;
+                std::cout << "= * 1,000 " << Currency.at(i)            << std::endl;
+                std::cout << "= Annual Interest Rate                  " << std::endl;
+                std::cout << "= * " << Interest[1] << "%" << std::endl;
+                std::cout << "= Interest Payment Frequency            " << std::endl;
+                std::cout << "= * Monthly                             " << std::endl;
+                std::cout << "= Benefits                              " << std::endl;
+                std::cout << "= *Free deposits and withdrawals        " << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "= 2 Smart Saver                         =" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "= Minimum Opening Deposit               " << std::endl;
+                std::cout << "= * 20,000 USD                          " << std::endl;
+                std::cout << "= Minimum Required Balance              " << std::endl;
+                std::cout << "= * 10,000 USD                          " << std::endl;
+                std::cout << "= Annual Interest Rate                  " << std::endl;
+                std::cout << "= * 8%                                  " << std::endl;
+                std::cout << "= Interest Payment Frequency            " << std::endl;
+                std::cout << "= * Quarterly                           " << std::endl;
+                std::cout << "= Benefits                              " << std::endl;
+                std::cout << "= *500 EGP bonus after maintaining the required balance for 12 consecutive months." << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "= 3 Premium Saver                       =" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "= Minimum Opening Deposit               " << std::endl;
+                std::cout << "= * 100,000 USD                         " << std::endl;
+                std::cout << "= Minimum Required Balance              " << std::endl;
+                std::cout << "= * 50,000 USD                          " << std::endl;
+                std::cout << "= Annual Interest Rate                  " << std::endl;
+                std::cout << "= * 12%                                 " << std::endl;
+                std::cout << "= Interest Payment Frequency            " << std::endl;
+                std::cout << "= * Annually                            " << std::endl;
+                std::cout << "= Benefits                              " << std::endl;
+                std::cout << "= * Free account maintenance fees.      " << std::endl;
+                std::cout << "= * Free Debit Card issuance and maintenance." << std::endl;
+                std::cout << "=========================================" << std::endl;
+                std::cout << "=========================================" << std::endl;
+            }
+        break;
+    }
+}
+
+void savingsProcess( int choice , std::vector <std::string> Products ){
+    Data data;
+        // do{
+
+        std::cout << "= Which Product?" << std::endl;
+                
+
+                // break;
+            // }
+        // }while(true);
+}
 
 // ATM MENU ====================== //
 // void menu( ){
