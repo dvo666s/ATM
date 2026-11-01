@@ -76,7 +76,7 @@ struct Card{ // Card Data ======================= //
 }; // Card Data End ======================= //
 
 int sizesProcess(int choice);
-void savingsMenu( int choice , std::vector <std::string> Currency , int Interest[] );
+void savingsMenu( std::vector <std::string> Currency , int Interest[] );
 void savingsProcess( int choice , std::vector <std::string> Products );
 void clientProcess();
 void accountProcess();
@@ -212,14 +212,9 @@ void accountProcess(){ // Account ====================== //
                 std::cerr << "= ERROR: OUT OF RANGE " << std::endl;
             } // End if ====================== //
         } // End for ====================== //
-        std::cout << "Stay On Standard Savings Account or explore our available Savings Plans? ";
-        std::cin >> data.option;
-        if(data.option == 'Y' || data.option == 'y'){
-            savingsMenu( data.choice , account.at(i).Currency , account.at(i).Interest.data() );
-        }else if(data.option == 'N' || data.option == 'n'){
-            savingsMenu( data.choice , account.at(i).Currency , account.at(i).Interest.data() );    
-        } else std::cerr << "PLEASE YES OR NO" << std::endl;
 
+        savingsMenu( account.at(i).Currency , account.at(i).Interest.data() );
+        
         std::cout << "Debit Card? " << std::endl;
         std::cin >> account.at(i).debitCardOptions;
         if( account.at(i).debitCardOptions == 'Y' || account.at(i).debitCardOptions == 'y' ){
@@ -230,14 +225,16 @@ void accountProcess(){ // Account ====================== //
     } // End for ====================== //
 } // Account End ====================== //
 
-void savingsMenu( int choice , std::vector <std::string> Currency , int Interest[] ){
+void savingsMenu( std::vector <std::string> Currency , int Interest[] ){
+    Data data;
 
-    switch(choice){
-        case 1:
-        std::cout << "\n================================" << std::endl;
-        std::cout << "=========== STANDARD =============" << std::endl;
-        std::cout << "================================" << std::endl;
-        for( int i = 0; i < Currency.size() ; ++i){
+    std::cout << "Stay On Standard Savings Account or explore our available Savings Plans? ";
+    std::cin >> data.option;
+        if(data.option == 'Y' || data.option == 'y'){
+            std::cout << "\n================================" << std::endl;
+            std::cout << "=========== STANDARD =============" << std::endl;
+            std::cout << "================================" << std::endl;
+            for( int i = 0; i < Currency.size() ; ++i){
             std::cout << "= Minimum Required Balance in" << Currency.at(i) << std::endl;
             std::cout << "= 500 " << Currency.at(i) << std::endl;
             std::cout << "= Annual Interest Rate " << std::endl;
@@ -248,16 +245,13 @@ void savingsMenu( int choice , std::vector <std::string> Currency , int Interest
             std::cout << "= * (Additional Fees Apply) " << std::endl;
             std::cout << "= Benefits " << std::endl;
             std::cout << "= * Basic deposits, withdrawals, and account management " << std::endl;
-            if( Currency.size() - 1 ){
+            if( ( Currency.size() - 1 ) < Currency.size() ){
                 std::cout << "================================" << std::endl;
             }
         }
             std::cout << "================================" << std::endl;
             std::cout << "================================" << std::endl;
-
-        break;
-
-        case 2:
+        }else if(data.option == 'N' || data.option == 'n'){
             std::cout << "\n========================================" << std::endl;
             std::cout << "============= SAVINGS PLANS =============" << std::endl;
             std::cout << "=========================================" << std::endl;
@@ -310,9 +304,8 @@ void savingsMenu( int choice , std::vector <std::string> Currency , int Interest
                 std::cout << "= * Free Debit Card issuance and maintenance." << std::endl;
                 std::cout << "=========================================" << std::endl;
                 std::cout << "=========================================" << std::endl;
-            }
-        break;
-    }
+            }   
+        } else std::cerr << "PLEASE YES OR NO" << std::endl;
 }
 
 void savingsProcess( int choice , std::vector <std::string> Products ){
