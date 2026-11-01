@@ -263,7 +263,7 @@ void savingsMenu( std::vector <std::string> Currency , int Interest[] ){
                 std::cout << "= 1 Basic Saver                         =" << std::endl;
                 std::cout << "=========================================" << std::endl;
                 std::cout << "= Minimum Opening Deposit               " << std::endl;
-                std::cout << "= * 5,000 "<< Currency.at(i)             << std::endl;
+                std::cout << "= * 5,000 "<< Currency.at(i)            << std::endl;
                 std::cout << "= Minimum Required Balance              " << std::endl;
                 std::cout << "= * 1,000 " << Currency.at(i)            << std::endl;
                 std::cout << "= Annual Interest Rate                  " << std::endl;
