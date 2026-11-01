@@ -76,7 +76,7 @@ struct Card{ // Card Data ======================= //
 }; // Card Data End ======================= //
 
 int sizesProcess(int choice);
-void savingsMenu( int choice , std::vector <std::string> Currency , std::array<int , 4>  Interest );
+void savingsMenu( int choice , std::vector <std::string> Currency , int Interest[] );
 void savingsProcess( int choice , std::vector <std::string> Products );
 void clientProcess();
 void accountProcess();
@@ -128,17 +128,17 @@ int main(){ // main  ======================= //
 } // End main  ======================= //
 
 int sizesProcess( int choice ){ // Sizes Process  ======================= //
-    int usertSize = 0 , clientSize = 0;
+    int accountSize = 0 , clientSize = 0;
         do{
             switch(choice){
                 case 1:
                     std::cout << "\n=================================" << std::endl;
                     std::cout << "======== SIZE OF USERS =========" << std::endl;
                     std::cout << "==================================" << std::endl;
-                    std::cout << "= HOW MANY USERS: ";
-                    std::cin >> usertSize;
-                    if(usertSize > 0){
-                        return usertSize;
+                    std::cout << "= HOW MANY CLIENT: ";
+                    std::cin >> clientSize;
+                    if(clientSize > 0){
+                        return clientSize;
                     } else std::cout << " ERROR: 0 OR NEGATIVE " << std::endl;
                 break;
 
@@ -146,10 +146,10 @@ int sizesProcess( int choice ){ // Sizes Process  ======================= //
                         std::cout << "\n=================================" << std::endl;
                         std::cout << "======== SIZE OF CLIENTS =========" << std::endl;
                         std::cout << "==================================" << std::endl;
-                        std::cout << "= HOW MANY CLIENT: ";
-                        std::cin >> clientSize;
-                        if(usertSize > 0){
-                            return usertSize;
+                        std::cout << "= HOW MANY ACCOUNT: ";
+                        std::cin >> accountSize;
+                        if(accountSize > 0){
+                            return accountSize;
                         } else std::cout << " ERROR: 0 OR NEGATIVE " << std::endl;
                 break;
             } // End switch ====================== //
@@ -214,10 +214,10 @@ void accountProcess(){ // Account ====================== //
         } // End for ====================== //
         std::cout << "Stay On Standard Savings Account or explore our available Savings Plans? ";
         std::cin >> data.option;
-        if(data.option == 'Y' && data.option == 'y'){
-            savingsMenu( data.option , account.at(i).Currency , account.at(i).Interest );
-        }else if(data.option == 'N' && data.option == 'n'){
-            savingsMenu( data.option , account.at(i).Currency , account.at(i).Interest );    
+        if(data.option == 'Y' || data.option == 'y'){
+            savingsMenu( data.choice , account.at(i).Currency , account.at(i).Interest.data() );
+        }else if(data.option == 'N' || data.option == 'n'){
+            savingsMenu( data.choice , account.at(i).Currency , account.at(i).Interest.data() );    
         } else std::cerr << "PLEASE YES OR NO" << std::endl;
 
         std::cout << "Debit Card? " << std::endl;
@@ -248,7 +248,7 @@ void savingsMenu( int choice , std::vector <std::string> Currency , int Interest
             std::cout << "= * (Additional Fees Apply) " << std::endl;
             std::cout << "= Benefits " << std::endl;
             std::cout << "= * Basic deposits, withdrawals, and account management " << std::endl;
-            if(){
+            if( Currency.size() - 1 ){
                 std::cout << "================================" << std::endl;
             }
         }
